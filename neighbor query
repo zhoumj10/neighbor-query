@@ -1,0 +1,25 @@
+def distance(self, point1, point2):
+        x1, y1 = point1
+        x2, y2 = point2
+
+        dx = x1 - x2
+        dy = y1 - y2
+
+        return dx * dx + dy * dy
+
+    def _nearest_neighbor(self, point, node, closest, depth):
+        if node is None:
+            return closest
+        if closest is None or self.distance(point, node.location) < self.distance(point, closest):
+            closest = node.location
+        axis = depth % 2
+        if point[axis] < node.location[axis]:
+            closest = self._nearest_neighbor(point, node.left, closest, depth+1)
+        else:
+            closest = self._nearest_neighbor(point, node.right, closest, depth+1)
+        return closest
+
+    def nearest_neighbor(self, point):
+        closest = None
+        depth = 0
+        return self._nearest_neighbor(point, self._root, closest, depth)
